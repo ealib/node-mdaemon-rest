@@ -32,6 +32,26 @@ REM production mode
 C:\Users\UserName\node-mdaemon-rest> yarn run start:prod
 ```
 
+## Customisation
+
+### Code
+
+- `src/main.ts` contains
+  - global prefix (`/api`);
+  - metadata for the OpenAPI 3.0 document;
+  - OpenAPI UI route (`/openapi`);
+- `src/auth/constants.ts` contains the secret string to sign/verify JWTs
+- `src/app.module.ts` contains the full path for static files (SPA etc.)
+
+### .env
+
+To override the default port (4242) you can create an `.env` file with a 
+line as follows:
+
+```env
+PORT=8080
+```
+
 ## Useful links
 
 - [Swagger UI](https://swagger.io/tools/swagger-ui/) &rarr; `http://localhost:4242/openapi`
