@@ -34,9 +34,9 @@ C:\Users\UserName\node-mdaemon-rest> yarn run start:prod
 
 ## Useful links
 
-- [Swagger UI](https://swagger.io/tools/swagger-ui/) &rarr; `http://localhost:8080/openapi`
-- OpenAPI 3.0 [JSON](https://www.json.org/json-en.html) API document &rarr; `http://localhost:8080/openapi-json`
-- OpenAPI 3.0 [YAML](https://yaml.org/) API document &rarr; `http://localhost:8080/openapi-yaml`
+- [Swagger UI](https://swagger.io/tools/swagger-ui/) &rarr; `http://localhost:4242/openapi`
+- OpenAPI 3.0 [JSON](https://www.json.org/json-en.html) API document &rarr; `http://localhost:4242/openapi-json`
+- OpenAPI 3.0 [YAML](https://yaml.org/) API document &rarr; `http://localhost:4242/openapi-yaml`
 
 OpenAPI document can be fed in to the [generator](https://openapi-generator.tech/docs/generators/#client-generators) to create proxy code to easily call the MDaemon APIs from your application.
 
