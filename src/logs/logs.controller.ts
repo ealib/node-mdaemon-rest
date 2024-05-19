@@ -37,7 +37,7 @@ export class LogsController {
         @Param('id') id: string,
         @Res({ passthrough: true }) res: Response
     ): Promise<StreamableFile> {
-        const stream = this.logsService.read(id);
+        const stream = await this.logsService.read(id);
         res.set('Content-Type', 'plain/text');
         res.set('Content-Disposition', `attachment; filename="${id}"`);
         return stream;
