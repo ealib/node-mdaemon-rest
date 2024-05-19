@@ -1,25 +1,26 @@
-// Nest.js
+// NestJS
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static';
+import { ServeStaticModule, ServeStaticModuleOptions } from '@nestjs/serve-static';
 
 // Application
-import { AuthModule } from './auth/auth.module';
+import { AuthGuard, AuthModule, RolesGuard } from './auth';
 import { LogsModule } from './logs/logs.module';
-import { AuthGuard, RolesGuard } from './auth';
 import { UsersModule } from './users/users.module';
 
 const optionsConfig: ConfigModuleOptions = {
     isGlobal: true,
 };
 
+const optionsServeStatic: ServeStaticModuleOptions = {
+    rootPath: 'C:\\MDaemon-REST-public', // index.html
+};
+
 @Module({
     imports: [
         ConfigModule.forRoot(optionsConfig),
-        ServeStaticModule.forRoot({
-            rootPath: 'C:\\MDaemon-REST-public', // index.html
-        }),
+        ServeStaticModule.forRoot(optionsServeStatic),
         AuthModule,
         LogsModule,
         UsersModule,
