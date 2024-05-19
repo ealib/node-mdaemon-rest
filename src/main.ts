@@ -22,7 +22,7 @@ async function bootstrap() {
         .setDescription('MD RESTful API Documentation')
         .setVersion(version)
         .setContact('MTKA Dev', 'https://mtka.eu', 'dev@mtka.eu')
-        .setLicense('MIT', 'https://opensource.org/license/mit')
+        .setLicense('MIT License', 'https://opensource.org/license/mit')
         .addBearerAuth() // Authentication: Bearer {jwtToken}
         .build();
     const oaDoc = SwaggerModule.createDocument(app, oadb);
