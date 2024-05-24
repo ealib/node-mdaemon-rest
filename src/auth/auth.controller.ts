@@ -6,7 +6,7 @@ import {
     HttpStatus,
     Post,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 // Application
 import { AuthService } from './auth.service';
@@ -21,6 +21,7 @@ export class AuthController {
 
     @Public()
     @HttpCode(HttpStatus.OK)
+    @ApiOperation({ operationId: 'authSignIn' })
     @Post()
     public signIn(@Body() signInDto: AuthenticateRequestDTO) {
         return this.authService.authenticate(signInDto.email, signInDto.secret);
