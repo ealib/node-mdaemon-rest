@@ -27,7 +27,7 @@ export class AuthService {
         if (!MD_LogonUser(email, secret)) {
             throw new UnauthorizedException();
         }
-        const userInfoFull = await this.usersService.findOne(email);
+        const userInfoFull = await this.usersService.read(email);
         if (!userInfoFull) {
             throw new UnauthorizedException();
         }
