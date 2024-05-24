@@ -1,5 +1,5 @@
 // NestJS
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -18,6 +18,7 @@ export class LogsController {
     constructor(private readonly logsService: LogsService) { }
 
     @Roles(['admin'])
+    @ApiOperation({ operationId: 'logsReadAll' })
     @Get()
     public async readAll(): Promise<LogFileInfoDTO[]> {
         const items = await this.logsService.readAll();
@@ -31,7 +32,14 @@ export class LogsController {
         return list;
     }
 
+    /**
+     * 
+     * @param id Name of the file to be downloaded.
+     * @param res (NestJS/Express internal)
+     * @returns StreamableFile
+     */
     @Roles(['admin'])
+    @ApiOperation({ operationId: 'logsRead' })
     @Get(':id')
     public async read(
         @Param('id') id: string,
