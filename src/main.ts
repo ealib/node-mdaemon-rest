@@ -1,5 +1,6 @@
 // NestJS
 import { ConfigService } from '@nestjs/config';
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -9,14 +10,7 @@ import { version } from 'node-mdaemon-api';
 // Application
 import { AppModule } from './app.module';
 
-async function bootstrap() {
-
-    // NestJS application with bootstrap module
-    const app = await NestFactory.create(AppModule);
-
-    app.setGlobalPrefix('api');
-
-    //#region OpenAPI document definition
+function setupOpenAPI(app: INestApplication<any>) {
     const oadb = new DocumentBuilder()
         .setTitle('MD REST API')
         .setDescription('MD RESTful API Documentation')
@@ -27,7 +21,18 @@ async function bootstrap() {
         .build();
     const oaDoc = SwaggerModule.createDocument(app, oadb);
     SwaggerModule.setup('openapi', app, oaDoc);
-    //#endregion
+}
+
+async function bootstrap() {
+
+    // NestJS application with bootstrap module
+    const app = await NestFactory.create(AppModule);
+
+    // Global route prefix
+    app.setGlobalPrefix('api');
+
+    // OpenAPI document definition
+    setupOpenAPI(app);
 
     // Configuration via .env file
     const config = app.get(ConfigService)
