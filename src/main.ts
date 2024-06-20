@@ -15,7 +15,7 @@ function setupOpenAPI(app: INestApplication<any>) {
         .setTitle('MD REST API')
         .setDescription('MD RESTful API Documentation')
         .setVersion(version)
-        .setContact('MTKA Dev', 'https://mtka.eu', 'dev@mtka.eu')
+        .setContact('MTKA Dev', 'https://mtka.eu/software/node-mdaemon-api', 'dev@mtka.eu')
         .setLicense('MIT License', 'https://opensource.org/license/mit')
         .addBearerAuth() // Authentication: Bearer {jwtToken}
         .build();
@@ -38,10 +38,12 @@ async function bootstrap() {
     const config = app.get(ConfigService)
 
     // Read listener PORT from configuration or default value
-    const port: number = config.get<number>('PORT', 4242)
+    const port: number = config.get<number>('PORT', 8080);
 
     // Start HTTP server
-    await app.listen(port);
+    await app.listen(port, () => {
+        console.debug('Server listening on port', port);
+    });
 }
 
 bootstrap();
