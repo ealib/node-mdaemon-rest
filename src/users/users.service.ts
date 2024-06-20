@@ -74,14 +74,8 @@ export class UsersService {
     //#endregion
 
     //#region CRUD - DELETE
-    public async delete(id: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (MD_DeleteUser(id, 0)) {
-                resolve();
-            } else {
-                reject();
-            }
-        });
+    public async delete(id: string): Promise<boolean> {
+        return MD_DeleteUser(id, 0);
     }
     //#endregion
 

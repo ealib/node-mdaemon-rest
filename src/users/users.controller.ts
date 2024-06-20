@@ -3,10 +3,10 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, NotFoundException, Param, Request, UnauthorizedException } from '@nestjs/common';
 
 // Application
-import { RoleHelper, Roles } from '../auth';
-import { UsersService } from './users.service';
-import { UserFullInfoDTO, UserInfoDTO } from './dto';
 import { AuthenticatedRequest } from 'src/auth/models';
+import { RoleHelper, Roles } from '../auth';
+import { UserFullInfoDTO, UserInfoDTO } from './dto';
+import { UsersService } from './users.service';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -38,7 +38,7 @@ export class UsersController {
         @Request() req: AuthenticatedRequest
     ): Promise<UserFullInfoDTO> {
         const role = new RoleHelper(req);
-        // if "user" => only info about her/his-self
+        // if "user" => only info about her/him-self
         // if "domainAdmin" => info about a user in that very domain
         // if role === "admin" info for any user
         if (role.isGlobalAdmin ||
