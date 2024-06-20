@@ -6,6 +6,7 @@ import { ServeStaticModule, ServeStaticModuleOptions } from '@nestjs/serve-stati
 
 // Application
 import { AuthGuard, AuthModule, RolesGuard } from './auth';
+import { GroupsModule } from './groups/groups.module';
 import { LogsModule } from './logs/logs.module';
 import { UsersModule } from './users/users.module';
 
@@ -22,6 +23,7 @@ const optionsServeStatic: ServeStaticModuleOptions = {
         ConfigModule.forRoot(optionsConfig),
         ServeStaticModule.forRoot(optionsServeStatic),
         AuthModule,
+        GroupsModule,
         LogsModule,
         UsersModule,
     ],
@@ -34,6 +36,6 @@ const optionsServeStatic: ServeStaticModuleOptions = {
             provide: APP_GUARD,
             useClass: RolesGuard,
         },
-    ]
+    ],
 })
 export class AppModule { }
