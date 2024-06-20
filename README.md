@@ -45,11 +45,11 @@ C:\Users\UserName\node-mdaemon-rest> yarn run start:prod
 
 ### .env
 
-To override the default port (4242) you can create an `.env` file with a 
+To override the default port (8080) you can create an `.env` file with a
 line as follows:
 
 ```env
-PORT=8080
+PORT=8081
 ```
 
 ## Useful links
