@@ -9,6 +9,7 @@ import { AuthGuard, AuthModule, RolesGuard } from './auth';
 import { GroupsModule } from './groups/groups.module';
 import { LogsModule } from './logs/logs.module';
 import { UsersModule } from './users/users.module';
+import { ListsModule } from './lists/lists.module';
 
 const optionsConfig: ConfigModuleOptions = {
     isGlobal: true,
@@ -24,6 +25,7 @@ const optionsServeStatic: ServeStaticModuleOptions = {
         ServeStaticModule.forRoot(optionsServeStatic),
         AuthModule,
         GroupsModule,
+        ListsModule,
         LogsModule,
         UsersModule,
     ],

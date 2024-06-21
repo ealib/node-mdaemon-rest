@@ -1,5 +1,12 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.3 - 2024-06-21
+
+New verbs and routes:
+
+    GET /api/lists
+    GET /api/lists/:id
+
 ## v0.0.2 - 2024-06-20
 
 Default port is now 8080/tcp.

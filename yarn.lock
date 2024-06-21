@@ -2962,10 +2962,10 @@ node-gyp@^10.0.0:
     tar "^6.1.2"
     which "^4.0.0"
 
-node-mdaemon-api@^24.0.0-alpha.31:
-  version "24.0.0-alpha.31"
-  resolved "https://registry.yarnpkg.com/node-mdaemon-api/-/node-mdaemon-api-24.0.0-alpha.31.tgz#50aa01d577d2f190f7fcfa66812618877c7e4d94"
-  integrity sha512-FlYqoLCW+4UyxwRG613trSozianHFgx7VxKh4ReXQ37dl7SkNgC9TMM8W2iNFzSm2U+SUscUgz6DvGOWV3aVOg==
+node-mdaemon-api@^24.0.0-alpha.32:
+  version "24.0.0-alpha.32"
+  resolved "https://registry.yarnpkg.com/node-mdaemon-api/-/node-mdaemon-api-24.0.0-alpha.32.tgz#f0e73b6771d9a9bbc1a50c2128a583bf1adad4e5"
+  integrity sha512-eSmWIIZGShywhCjhyoh2QNBy0Wm5Jri3lHPvILSxZvPAuZrGcwnc6OW4rZEyUdC4/Pr8C4pOEyy8+klxgxRsKw==
 
 node-releases@^2.0.14:
   version "2.0.14"

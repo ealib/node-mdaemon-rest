@@ -1,6 +1,6 @@
 {
   "name": "node-mdaemon-rest",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "RESTful API server for MDaemon",
   "author": {
     "name": "Emanuele Aliberti",
@@ -28,7 +28,7 @@
     "@nestjs/platform-express": "^10.3.9",
     "@nestjs/serve-static": "^4.0.2",
     "@nestjs/swagger": "^7.3.1",
-    "node-mdaemon-api": "^24.0.0-alpha.31",
+    "node-mdaemon-api": "^24.0.0-alpha.32",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
