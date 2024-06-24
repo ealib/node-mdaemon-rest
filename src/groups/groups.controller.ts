@@ -3,8 +3,7 @@ import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 // Application
-import { GroupFullInfoDTO } from './dto/group-full-info.dto';
-import { GroupInfoDTO } from './dto';
+import { GroupFullInfoDTO, GroupInfoDTO } from './dto';
 import { GroupsService } from './groups.service';
 import { Roles } from 'src/auth';
 
