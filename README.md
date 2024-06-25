@@ -20,7 +20,7 @@ flowchart TD
     node<-- native module -->nma
     nma<-- native APIs -->md
 
-    style nmr fill:#444
+    style nmr fill:#eee
     style node fill:#0f0
     style nma fill:#ff0
     style md fill:#f00
