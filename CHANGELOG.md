@@ -1,5 +1,18 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.4 - 2024-06-25
+
+Document routes for OpenAPI document.
+
+New verbs and routes:
+
+    DELETE /api/logs/:id
+    GET /api/lists/:id/members
+
+Fix
+
+    POST /api/auth
+
 ## v0.0.3 - 2024-06-21
 
 New verbs and routes:

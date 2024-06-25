@@ -15,6 +15,12 @@ export class UsersController {
 
     public constructor(private readonly usersService: UsersService) { }
 
+    /**
+     * Enumerate MDaemon's user database.
+     * 
+     * @param req INTERNAL for authorisation
+     * @returns array of UserInfoDTO
+     */
     @Roles(['user'])
     @ApiOperation({ operationId: 'usersReadAll' })
     @Get()
@@ -30,6 +36,13 @@ export class UsersController {
         return filteredItems.map(item => UserInfoDTO.marshal(item));
     }
 
+    /**
+     * Read a full user definition from MDaemon user database.
+     * 
+     * @param id user address
+     * @param req INTERNAL for authorisation
+     * @returns UserFullInfoDTO on success
+     */
     @Roles(['user'])
     @ApiOperation({ operationId: 'usersRead' })
     @Get(':id')

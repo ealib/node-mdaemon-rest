@@ -2,7 +2,7 @@
 import { Injectable, StreamableFile } from '@nestjs/common';
 
 // Node.js
-import { opendir, stat } from 'node:fs/promises';
+import { opendir, stat, unlink } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { join } from 'node:path';
 
@@ -20,15 +20,19 @@ export class LogsService {
         this.path = join(mdAppPath, '../Logs');
     }
 
+    private validate(id: string) {
+        if (!id) {
+            throw new Error('missing log ID');
+        }
+        if ((id.startsWith('.') || id.includes('\\') || id.includes('/') || id.includes(':'))) {
+            throw new Error('invalid log ID ' + id);
+        }
+    }
+
     public async read(id: string): Promise<StreamableFile> {
         console.debug('read', id);
         try {
-            if (!id) {
-                throw new Error('missing log ID');
-            }
-            if ((id.startsWith('.') || id.includes('\\') || id.includes('/') || id.includes(':'))) {
-                throw new Error('invalid log ID ' + id);
-            }
+            this.validate(id);
             const fileName = join(this.path, id);
             const stream = createReadStream(fileName);
             return new StreamableFile(stream);
@@ -56,5 +60,17 @@ export class LogsService {
         }
 
         return logFiles;
+    }
+
+    public async delete(id: string): Promise<boolean> {
+        try {
+            this.validate(id);
+            await unlink(id);
+            return true;
+        }
+        catch (e) {
+            console.debug(e);
+        }
+        return false;
     }
 }

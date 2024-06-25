@@ -1,6 +1,6 @@
 // NestJS
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Res, StreamableFile } from '@nestjs/common';
 
 // Express.js
 import { Response } from 'express';
@@ -18,6 +18,11 @@ export class LogsController {
 
     constructor(private readonly logsService: LogsService) { }
 
+    /**
+     * Enumerate MDaemon's log files.
+     * 
+     * @returns array of LogFileInfoDTO
+     */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'logsReadAll' })
     @Get()
@@ -34,6 +39,7 @@ export class LogsController {
     }
 
     /**
+     * Download a log file.
      * 
      * @param id Name of the file to be downloaded.
      * @param res (NestJS/Express internal)
@@ -51,4 +57,18 @@ export class LogsController {
         res.set('Content-Disposition', `attachment; filename="${id}"`);
         return stream;
     }
+
+    /**
+     * Delete a log file.
+     * 
+     * @param id Name of the file to be deleted
+     * @returns true on success; false otherwise
+     */
+    @Roles(['admin'])
+    @ApiOperation({ operationId: 'logsDelete' })
+    @Delete(':id')
+    public async delete(@Param('id') id: string): Promise<boolean> {
+        return this.logsService.delete(id);
+    }
+
 }

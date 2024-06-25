@@ -14,6 +14,11 @@ export class GroupsController {
 
     public constructor(private readonly groupsService: GroupsService) { }
 
+    /**
+     * Enumerate MDaemon's user groups.
+     * 
+     * @returns array of GroupInfoDTO
+     */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'groupsReadAll' })
     @Get()
@@ -22,6 +27,12 @@ export class GroupsController {
         return userGroups.map(ug => GroupInfoDTO.marshal(ug));
     }
 
+    /**
+     * Read a group's members.
+     * 
+     * @param id a group's name
+     * @returns array of a group's members
+     */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'groupsReadAllMembers' })
     @Get(':id/members')
@@ -29,6 +40,12 @@ export class GroupsController {
         return await this.groupsService.readAllMembers(id);
     }
 
+    /**
+     * Read a MDaemon's group definition.
+     * 
+     * @param id a group's name
+     * @returns GroupFullInfoDTO
+     */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'groupsRead' })
     @Get(':id')

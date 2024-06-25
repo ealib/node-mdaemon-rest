@@ -28,4 +28,21 @@ export class ListsService {
         return MD_InitListInfo(id);
     }
 
+    public async readAllMembers(
+        id: string,
+        includeQueries = false,
+    ): Promise<MD_ListMember[]> {
+        if (!id) {
+            return [];
+        }
+        if (!MD_ListExists(id)) {
+            return [];
+        }
+        try {
+            return readMailingListMembersSync(id, includeQueries);
+        } catch (e) {
+            console.debug(e);
+        }
+        return [];
+    }
 }
