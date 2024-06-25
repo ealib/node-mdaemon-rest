@@ -6,6 +6,27 @@
 for a [RESTful](https://en.wikipedia.org/wiki/REST) API server for
 [MDaemon](https://mdaemon.com/pages/mdaemon-email-server).
 
+```mermaid
+---
+title Architecture
+---
+flowchart TD
+    nmr((node-mdaemon-rest))
+    node{{Node.js}}
+    nma((node-mdaemon-api))
+    md[/MDaemon/]
+
+    nmr<-- interpreted -->node
+    node<-- native module -->nma
+    nma<-- native APIs -->md
+
+    style nmr fill:#444
+    style node fill:#0f0
+    style nma fill:#ff0
+    style md fill:#f00
+```
+
+
 ## Installation
 
 ```dos
