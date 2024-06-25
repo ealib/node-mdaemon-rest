@@ -26,7 +26,6 @@ flowchart TD
     style md fill:#f00
 ```
 
-
 ## Installation
 
 ```dos
