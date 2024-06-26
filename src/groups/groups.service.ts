@@ -11,8 +11,15 @@ import {
     MD_GroupInit,
 } from 'node-mdaemon-api';
 
+// Application
+import { BaseService } from 'src/shared';
+
 @Injectable()
-export class GroupsService {
+export class GroupsService extends BaseService {
+
+    constructor() {
+        super(GroupsService.name);
+    }
 
     public async readAll(): Promise<GroupListItem[]> {
         return MD_GroupGetAllWithDesc() ?? [];

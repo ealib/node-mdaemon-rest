@@ -1,5 +1,13 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.5 - untagged
+
+New verbs and routes:
+
+    GET /api/system/info
+
+Services have a common ancestor (currently empty).
+
 ## v0.0.4 - 2024-06-25
 
 Document routes for OpenAPI document.

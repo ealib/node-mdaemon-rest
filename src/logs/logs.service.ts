@@ -10,13 +10,15 @@ import { join } from 'node:path';
 import { mdAppPath } from 'node-mdaemon-api';
 
 // Application
+import { BaseService } from 'src/shared';
 import { LogFileInfo } from './models';
 
 @Injectable()
-export class LogsService {
+export class LogsService extends BaseService {
     public readonly path: string;
 
     constructor() {
+        super(LogsService.name);
         this.path = join(mdAppPath, '../Logs');
     }
 

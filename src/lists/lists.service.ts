@@ -11,9 +11,16 @@ import {
     readMailingListMembersSync,
 } from 'node-mdaemon-api';
 
-@Injectable()
-export class ListsService {
+// Application
+import { BaseService } from 'src/shared';
 
+@Injectable()
+export class ListsService extends BaseService {
+
+    constructor() {
+        super(ListsService.name);
+    }
+    
     public async readAll(): Promise<string[]> {
         return MD_ListGetNames() ?? [];
     }

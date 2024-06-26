@@ -10,6 +10,7 @@ import { GroupsModule } from './groups/groups.module';
 import { LogsModule } from './logs/logs.module';
 import { UsersModule } from './users/users.module';
 import { ListsModule } from './lists/lists.module';
+import { SystemModule } from './system/system.module';
 
 const optionsConfig: ConfigModuleOptions = {
     isGlobal: true,
@@ -28,6 +29,7 @@ const optionsServeStatic: ServeStaticModuleOptions = {
         ListsModule,
         LogsModule,
         UsersModule,
+        SystemModule,
     ],
     providers: [
         {

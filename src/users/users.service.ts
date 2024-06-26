@@ -14,8 +14,15 @@ import {
     readUsers,
 } from 'node-mdaemon-api';
 
+// Application
+import { BaseService } from 'src/shared';
+
 @Injectable()
-export class UsersService {
+export class UsersService extends BaseService {
+
+    constructor() {
+        super(UsersService.name);
+    }
 
     //#region CRUD
 

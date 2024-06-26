@@ -6,18 +6,21 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { MD_LogonUser } from 'node-mdaemon-api';
 
 // Application
+import { BaseService } from 'src/shared';
 import { AuthenticateResponseDTO } from './dto';
 import { JwtPayload } from './models';
 import { UsersService } from '../users/users.service';
 
 
 @Injectable()
-export class AuthService {
+export class AuthService extends BaseService {
 
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService
-    ) { }
+    ) {
+        super(AuthService.name);
+    }
 
     public async authenticate(
         email: string,
