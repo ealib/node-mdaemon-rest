@@ -1,14 +1,15 @@
 // NestJS
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Delete, Get, Param, Res, StreamableFile } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Delete, Get, Header, Param, Query, Res, StreamableFile } from '@nestjs/common';
 
 // Express.js
 import { Response } from 'express';
 
 // Application
-import { LogFileInfoDTO } from './dto';
+import { LogFileInfoDTO, LogListPageResponseDTO } from './dto';
 import { LogsService } from './logs.service';
 import { Roles } from '../auth';
+import { ListPageParams, ListPageResponseDTO } from 'src/shared';
 
 
 @ApiBearerAuth()
@@ -21,21 +22,41 @@ export class LogsController {
     /**
      * Enumerate MDaemon's log files.
      * 
-     * @returns array of LogFileInfoDTO
+     * @param page page number 0..n (default 0)
+     * @param pageSize page size (default 10)
+     * @returns LogListPageResponseDTO
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'logsReadAll' })
+    @ApiQuery({ name: 'page', required: false, description: 'Requested page number, starting from zero for the first page (default is 0).' })
+    @ApiQuery({ name: 'pageSize', required: false, description: 'Page size (default is 10). ' })
+    @ApiResponse({ status: 200, description: 'List page response for logs', type: LogListPageResponseDTO })
+    @Header('Cache-Control', 'none')
     @Get()
-    public async readAll(): Promise<LogFileInfoDTO[]> {
-        const items = await this.logsService.readAll();
-        const list: LogFileInfoDTO[] =
-            items.map(logInfo => new LogFileInfoDTO(
+    public async readAll(
+        @Query('page') page: string | number | undefined = 0,
+        @Query('pageSize') pageSize: string | number | undefined  = 10,
+    ): Promise<LogListPageResponseDTO> {
+        const params = new ListPageParams(page, pageSize);
+        const result = await this.logsService.readAll(params);
+        const dtos: LogFileInfoDTO[] =
+            result.data.map(logInfo => new LogFileInfoDTO(
+                logInfo.id,
                 logInfo.dirent.name,
                 logInfo.stats.size,
                 logInfo.stats.ctime,
                 logInfo.stats.mtime,
             ));
-        return list;
+        const response = new
+            LogListPageResponseDTO(
+                true,
+                'OK',
+                result.total,
+                params.page.index,
+                params.page.size);
+        response.data = dtos;
+        console.dir(response);
+        return response;
     }
 
     /**
@@ -47,6 +68,7 @@ export class LogsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'logsRead' })
+    @Header('Cache-Control', 'none')
     @Get(':id')
     public async read(
         @Param('id') id: string,
@@ -68,7 +90,7 @@ export class LogsController {
     @ApiOperation({ operationId: 'logsDelete' })
     @Delete(':id')
     public async delete(@Param('id') id: string): Promise<boolean> {
-        return this.logsService.delete(id);
+        return await this.logsService.delete(id);
     }
 
 }

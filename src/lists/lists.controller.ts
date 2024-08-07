@@ -1,9 +1,10 @@
 // NestJS
-import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Header, NotFoundException, Param, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 // Application
-import { ListDTO, ListListItemDTO, ListMemberDTO } from './dto';
+import { ListDTO, ListListItemDTO, ListListPageResponseDTO, ListMemberDTO } from './dto';
+import { ListPageParams } from 'src/shared';
 import { ListsService } from './lists.service';
 import { Roles } from 'src/auth';
 
@@ -18,14 +19,25 @@ export class ListsController {
     /**
      * Enumerate MDaemon's mailing lists.
      * 
-     * @returns array of ListListItemDTO
+     * @returns ListListPageResponseDTO
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'listsReadAll' })
+    @ApiQuery({ name: 'page', required: false, description: 'Requested page number, starting from zero for the first page (default is 0).' })
+    @ApiQuery({ name: 'pageSize', required: false, description: 'Page size (default is 10). ' })
+    @ApiResponse({ status: 200, description: 'List page response for Mailing lists', type: ListListPageResponseDTO })
+    @Header('Cache-Control', 'none')
     @Get()
-    public async readAll(): Promise<ListListItemDTO[]> {
-        const lists = await this.listsService.readAll();
-        return lists.map(ug => new ListListItemDTO(ug));
+    public async readAll(
+        @Query('page') page: string | number | undefined = 0,
+        @Query('pageSize') pageSize: string | number | undefined = 10,
+    ): Promise<ListListPageResponseDTO> {
+        const params = new ListPageParams(page, pageSize);
+        const lists = await this.listsService.readAll(params);
+        const dtos = lists.data.map(li => ListListItemDTO.marshal(li));
+        const response = new ListListPageResponseDTO(true, 'OK', lists.total, params.page.index, params.page.size);
+        response.data = dtos;
+        return response;
     }
 
     /**
@@ -37,6 +49,8 @@ export class ListsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'listsReadAllMembers' })
+    @ApiParam({ name: 'id', description: 'Mailing list address.' })
+    @ApiQuery({ name: 'includeQueries', description: 'Include queries.' })
     @Get(':id/members')
     public async readAllMembers(
         @Param('id') id: string,
@@ -54,6 +68,7 @@ export class ListsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'listsRead' })
+    @ApiParam({ name: 'id', description: 'Mailing list address.' })
     @Get(':id')
     public async read(@Param('id') id: string): Promise<ListDTO> {
         const list = await this.listsService.read(id);

@@ -3,6 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 export class LogFileInfoDTO {
 
     @ApiProperty()
+    public readonly id: string;
+
+    @ApiProperty()
     public readonly name: string;
 
     @ApiProperty()
@@ -15,11 +18,13 @@ export class LogFileInfoDTO {
     public readonly modified: Date;
 
     public constructor(
+        id: string,
         name: string,
         size: number,
         created: Date,
         modified: Date,
     ) {
+        this.id = id;
         this.name = name;
         this.size = size;
         this.created = created;

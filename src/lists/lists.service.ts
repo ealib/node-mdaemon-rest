@@ -12,7 +12,8 @@ import {
 } from 'node-mdaemon-api';
 
 // Application
-import { BaseService } from 'src/shared';
+import { BaseService, ListPageParams } from 'src/shared';
+import { ListListItem, ListListPageResult } from './models';
 
 @Injectable()
 export class ListsService extends BaseService {
@@ -21,8 +22,15 @@ export class ListsService extends BaseService {
         super(ListsService.name);
     }
     
-    public async readAll(): Promise<string[]> {
-        return MD_ListGetNames() ?? [];
+    public async readAll(params: ListPageParams): Promise<ListListPageResult> {
+        const listNames = MD_ListGetNames() ?? [];
+        const listNamesPage = this.arrayToPage(params.page, listNames);
+        const page = listNamesPage.map(listName => {
+            const listInfo = MD_InitListInfo(listName);
+            return new ListListItem(listName, listInfo?.ListDescription);
+        });
+        const result = new ListListPageResult(page, listNames.length);
+        return result;
     }
 
     public async read(id: string): Promise<MD_List | undefined> {
