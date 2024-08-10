@@ -33,10 +33,10 @@ export class ListsController {
         @Query('pageSize') pageSize: string | number | undefined = 10,
     ): Promise<ListListPageResponseDTO> {
         const params = new ListPageParams(page, pageSize);
-        const lists = await this.listsService.readAll(params);
-        const dtos = lists.data.map(li => ListListItemDTO.marshal(li));
-        const response = new ListListPageResponseDTO(true, 'OK', lists.total, params.page.index, params.page.size);
-        response.data = dtos;
+        const entityPage = await this.listsService.readAll(params);
+        const response = new ListListPageResponseDTO(true, 'OK', entityPage.total, params.page.index, params.page.size);
+        const entityDtos = entityPage.data.map(entity => ListListItemDTO.marshal(entity));
+        response.data = entityDtos;
         return response;
     }
 

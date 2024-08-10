@@ -23,13 +23,13 @@ export class ListsService extends BaseService {
     }
     
     public async readAll(params: ListPageParams): Promise<ListListPageResult> {
-        const listNames = MD_ListGetNames() ?? [];
-        const listNamesPage = this.arrayToPage(params.page, listNames);
-        const page = listNamesPage.map(listName => {
+        const entityList = MD_ListGetNames() ?? [];
+        const entityPage = this.arrayToPage(params.page, entityList);
+        const entityPage2 = entityPage.map(listName => {
             const listInfo = MD_InitListInfo(listName);
             return new ListListItem(listName, listInfo?.ListDescription);
         });
-        const result = new ListListPageResult(page, listNames.length);
+        const result = new ListListPageResult(entityPage2, entityList.length);
         return result;
     }
 
