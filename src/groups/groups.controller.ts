@@ -1,11 +1,12 @@
 // NestJS
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Header, NotFoundException, Param, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 // Application
-import { GroupFullInfoDTO, GroupInfoDTO } from './dto';
+import { GroupDTO, GroupListItemDTO, GroupListPageResponseDTO } from './dto';
 import { GroupsService } from './groups.service';
 import { Roles } from 'src/auth';
+import { ListPageParams } from 'src/shared';
 
 @ApiBearerAuth()
 @ApiTags('groups')
@@ -21,10 +22,21 @@ export class GroupsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'groupsReadAll' })
+    @ApiQuery({ name: 'page', required: false, description: 'Requested page number, starting from zero for the first page (default is 0).' })
+    @ApiQuery({ name: 'pageSize', required: false, description: 'Page size (default is 10). ' })
+    @ApiResponse({ status: 200, description: 'List page response for user groups', type: GroupListPageResponseDTO })
+    @Header('Cache-Control', 'none')
     @Get()
-    public async readAll(): Promise<GroupInfoDTO[]> {
-        const userGroups = await this.groupsService.readAll();
-        return userGroups.map(ug => GroupInfoDTO.marshal(ug));
+    public async readAll(
+        @Query('page') page: string | number | undefined = 0,
+        @Query('pageSize') pageSize: string | number | undefined = 10,
+    ): Promise<GroupListPageResponseDTO> {
+        const params = new ListPageParams(page, pageSize);
+        const entityPage = await this.groupsService.readAll(params);
+        const response = new GroupListPageResponseDTO(true, 'OK', entityPage.total, params.page.index, params.page.size);
+        const entityDtos = entityPage.data.map(entity => GroupListItemDTO.marshal(entity));
+        response.data = entityDtos;
+        return response;
     }
 
     /**
@@ -49,10 +61,10 @@ export class GroupsController {
     @Roles(['admin'])
     @ApiOperation({ operationId: 'groupsRead' })
     @Get(':id')
-    public async read(@Param('id') id: string): Promise<GroupFullInfoDTO> {
+    public async read(@Param('id') id: string): Promise<GroupDTO> {
         const groupInfo = await this.groupsService.read(id);
         if (groupInfo) {
-            return GroupFullInfoDTO.marshal(groupInfo);
+            return GroupDTO.marshal(groupInfo);
         }
         throw new NotFoundException();
     }

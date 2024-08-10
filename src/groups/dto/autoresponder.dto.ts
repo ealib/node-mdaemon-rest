@@ -1,7 +1,7 @@
 // node-mdaemon-api
 import { MD_AutoResponder } from "node-mdaemon-api";
 
-export class MdAutoresponderDTO implements MD_AutoResponder {
+export class AutoresponderDTO implements MD_AutoResponder {
 
     //#region implement MD_AutoResponder
     public readonly AddToList: string;
@@ -16,8 +16,8 @@ export class MdAutoresponderDTO implements MD_AutoResponder {
     public readonly StartTime: string;
     //#endregion
 
-    public static marshal(mdAutoresponder: MD_AutoResponder): MdAutoresponderDTO {
-        return Object.assign(new MdAutoresponderDTO(), mdAutoresponder);
+    public static marshal(mdAutoresponder: MD_AutoResponder): AutoresponderDTO {
+        return Object.assign(new AutoresponderDTO(), mdAutoresponder);
     }
     
 }

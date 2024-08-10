@@ -1,3 +1,4 @@
-export * from './group-info.dto';
-export * from './group-full-info.dto';
-export * from './md-autoresponder.dto';
+export * from './autoresponder.dto';
+export * from './group-list-item.dto';
+export * from './group-list-page-response.dto';
+export * from './group.dto';

@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 
 // node-mdaemon-api
 import {
-    GroupListItem,
     MD_Group,
     MD_GroupExists,
     MD_GroupGetAllWithDesc,
@@ -12,7 +11,8 @@ import {
 } from 'node-mdaemon-api';
 
 // Application
-import { BaseService } from 'src/shared';
+import { BaseService, ListPageParams } from 'src/shared';
+import { GroupListItem, GroupListPageResult } from './models';
 
 @Injectable()
 export class GroupsService extends BaseService {
@@ -21,8 +21,12 @@ export class GroupsService extends BaseService {
         super(GroupsService.name);
     }
 
-    public async readAll(): Promise<GroupListItem[]> {
-        return MD_GroupGetAllWithDesc() ?? [];
+    public async readAll(params: ListPageParams): Promise<GroupListPageResult> {
+        const entityList = MD_GroupGetAllWithDesc() ?? [];
+        const entityPage = this.arrayToPage(params.page, entityList);
+        const data = entityPage.map(g => GroupListItem.marshal(g));
+        const result = new GroupListPageResult(data, entityList.length);
+        return result;
     }
 
     public async read(id: string): Promise<MD_Group | undefined> {
