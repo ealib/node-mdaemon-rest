@@ -1,6 +1,6 @@
 // NestJS
 import { ConfigService } from '@nestjs/config';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -24,6 +24,7 @@ function setupOpenAPI(app: INestApplication<any>) {
 }
 
 async function bootstrap() {
+    const logger = new Logger(bootstrap.name);
 
     // NestJS application with bootstrap module
     const app = await NestFactory.create(AppModule);
@@ -42,7 +43,7 @@ async function bootstrap() {
 
     // Start HTTP server
     await app.listen(port, () => {
-        console.debug('Server listening on port', port);
+        logger.debug(`Server listening on port ${port}`);
     });
 }
 
