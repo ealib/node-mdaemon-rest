@@ -1,5 +1,5 @@
 // NestJS
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 // node-mdaemon-api
 import { MdInfo, ModuleInfo, getMdInfo, getModuleInfo, versions } from 'node-mdaemon-api';
@@ -11,6 +11,8 @@ import { NativeModuleInfo } from './models';
 @Injectable()
 export class SystemService
     extends BaseService {
+
+    readonly logger = new Logger(SystemService.name);
 
     constructor() {
         super(SystemService.name);

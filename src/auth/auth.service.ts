@@ -1,13 +1,13 @@
 // NestJS
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 
 // node-mdaemon-api
 import { MD_LogonUser } from 'node-mdaemon-api';
 
 // Application
-import { BaseService } from 'src/shared';
 import { AuthenticateResponseDTO } from './dto';
+import { BaseService } from 'src/shared';
 import { JwtPayload } from './models';
 import { UsersService } from '../users/users.service';
 
@@ -15,11 +15,14 @@ import { UsersService } from '../users/users.service';
 @Injectable()
 export class AuthService extends BaseService {
 
+    readonly logger = new Logger(AuthService.name);
+
     constructor(
         private readonly usersService: UsersService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
     ) {
         super(AuthService.name);
+        this.logger.debug(this.name);
     }
 
     public async authenticate(

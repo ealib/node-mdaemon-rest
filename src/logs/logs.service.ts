@@ -1,5 +1,6 @@
 // NestJS
 import { Injectable, StreamableFile } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 
 // Node.js
 import { opendir, stat, unlink } from 'node:fs/promises';
@@ -18,22 +19,12 @@ import { LogFileInfo, LogListPageResult } from './models';
 export class LogsService extends BaseService {
     public readonly path: string;
 
-    private strToHex(name: string): string {
-        return Array.from(name).map(s => s.charCodeAt(0).toString(16)).join('');
-    }
+    readonly logger = new Logger(LogsService.name);
 
     constructor() {
         super(LogsService.name);
+        this.logger.debug(this.name);
         this.path = join(mdAppPath, '../Logs');
-    }
-
-    private validate(id: string) {
-        if (!id) {
-            throw new Error('missing log ID');
-        }
-        if ((id.startsWith('.') || id.includes('\\') || id.includes('/') || id.includes(':'))) {
-            throw new Error('invalid log ID ' + id);
-        }
     }
 
     public async read(id: string): Promise<StreamableFile> {
@@ -67,7 +58,7 @@ export class LogsService extends BaseService {
                         const fullName = join(dirent.parentPath, dirent.name);
                         console.log('--->', tot, fullName);
                         const stats = await stat(fullName);
-                        const id = this.strToHex(dirent.name);
+                        const id = this.createId(dirent.name);
                         logFiles.push(new LogFileInfo(id, dirent, stats));
                         --fill;
                     } else {
@@ -94,4 +85,36 @@ export class LogsService extends BaseService {
         }
         return false;
     }
+
+    //#region helpers
+    private checksum(input: string): string {
+        let chk = 0x12345678;
+        const len = input.length;
+
+        for (var i = 0; i < len; i++) {
+            chk += (input.charCodeAt(i) * (i + 1));
+        }
+
+        return (chk & 0xffffffff).toString(16);
+    }
+
+    private strToHex(name: string): string {
+        return Array.from(name).map(s => s.charCodeAt(0).toString(16)).join('');
+    }
+
+    private createId(name: string): string {
+        const nameEncoded = this.strToHex(name);
+        const nameChecksum = this.checksum(name);
+        return `${nameEncoded}.${nameChecksum}`;
+    }
+
+    private validate(id: string) {
+        if (!id) {
+            throw new Error('missing log ID');
+        }
+        if ((id.startsWith('.') || id.includes('\\') || id.includes('/') || id.includes(':'))) {
+            throw new Error('invalid log ID ' + id);
+        }
+    }
+    //#endregion
 }

@@ -1,10 +1,14 @@
+// NestJS
+import { Logger } from "@nestjs/common";
+
+// Application
 import { IListPage } from "./interface";
 
 export abstract class BaseService {
 
-    constructor(private readonly name: string) {
-        console.debug(BaseService.name, name);
-    }
+    readonly abstract logger: Logger;
+
+    constructor(public readonly name: string) { }
 
     protected arrayToPage<T>(
         requestedPage: IListPage,

@@ -1,5 +1,5 @@
 // NestJS
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 // node-mdaemon-api
 import {
@@ -18,8 +18,11 @@ import { ListListItem, ListListPageResult } from './models';
 @Injectable()
 export class ListsService extends BaseService {
 
+    readonly logger = new Logger(ListsService.name);
+
     constructor() {
         super(ListsService.name);
+        this.logger.debug(this.name);
     }
     
     public async readAll(params: ListPageParams): Promise<ListListPageResult> {
