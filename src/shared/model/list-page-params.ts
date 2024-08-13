@@ -4,6 +4,8 @@ export class ListPageParams {
 
     public readonly page: IListPage = { index: 0, size: 10 };
 
+    #filters: { [key: string]: any, } = {};
+
     constructor(page?: number | string, pageSize?: number | string) {
         if (page) {
             if (typeof page === 'number') {
@@ -21,5 +23,18 @@ export class ListPageParams {
                 this.page.size = isNaN(n) ? 10 : n;
             }
         }
+    }
+
+    public get hasFilters(): boolean {
+        return Object.keys(this.#filters).length > 0;
+    }
+    public get filterNames(): string[] {
+        return Object.keys(this.#filters);
+    }
+    public addFilter(name: string, value: any) {
+        this.#filters[name] = value;
+    }
+    public getFilter<TValue>(name: string): TValue {
+        return this.#filters[name] as TValue;
     }
 }
