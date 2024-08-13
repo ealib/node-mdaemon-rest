@@ -1,11 +1,12 @@
 // NestJS
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, NotFoundException, Param, Request, UnauthorizedException } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Header, NotFoundException, Param, Query, Request, UnauthorizedException } from '@nestjs/common';
 
 // Application
+import { ApiQueryPage, ApiQueryPageSize, ApiResponseListOK, ListPageParams } from 'src/shared';
 import { AuthenticatedRequest } from 'src/auth/models';
 import { RoleHelper, Roles } from '../auth';
-import { UserFullInfoDTO, UserInfoDTO } from './dto';
+import { UserDTO, UserListItemDTO, UserListPageResponseDTO } from './dto';
 import { UsersService } from './users.service';
 
 @ApiBearerAuth()
@@ -18,22 +19,38 @@ export class UsersController {
     /**
      * Enumerate MDaemon's user database.
      * 
+     * Note that there is an implicit filter due to the roles of the caller.
+     * 
      * @param req INTERNAL for authorisation
      * @returns array of UserInfoDTO
      */
     @Roles(['user'])
     @ApiOperation({ operationId: 'usersReadAll' })
+    @ApiQuery(ApiQueryPage)
+    @ApiQuery(ApiQueryPageSize)
+    @ApiResponse(ApiResponseListOK('users', UserListPageResponseDTO))
+    @Header('Cache-Control', 'none')
     @Get()
-    public async readAll(@Request() req: AuthenticatedRequest): Promise<UserInfoDTO[]> {
-        const role = new RoleHelper(req);
+    public async readAll(
+        @Query('page') page: string | number | undefined = 0,
+        @Query('pageSize') pageSize: string | number | undefined = 10,
+        @Request() req: AuthenticatedRequest,
+    ): Promise<UserListPageResponseDTO> {
+        const params = new ListPageParams(page, pageSize);
+        const callerRole = new RoleHelper(req);
+        params.addFilter('roles', callerRole);
         // if "admin" ALL; if "domainAdmin" domain users ONLY
-        const [_, domain] = role.isGlobalAdmin ? [undefined, undefined] : role.id.split('@');
-        const items = await this.usersService.readAll(domain);
+        const [_, domain] = callerRole.isGlobalAdmin ? [undefined, undefined] : callerRole.id.split('@');
+        if (domain) {
+            params.addFilter('domain', domain);
+        }
+        const pageResult = await this.usersService.readAll(params, domain);
         const filteredItems =
-            (role.isGlobalAdmin || role.isDomainAdmin)
-                ? items
-                : items.filter(item => item.Email === role.id)
-        return filteredItems.map(item => UserInfoDTO.marshal(item));
+            (callerRole.isGlobalAdmin || callerRole.isDomainAdmin)
+                ? pageResult.data
+                : pageResult.data.filter(item => item.Email === callerRole.id)
+        const dtos = filteredItems.map(item => UserListItemDTO.marshal(item));
+        return UserListPageResponseDTO.success(dtos, pageResult.total, params);
     }
 
     /**
@@ -49,7 +66,7 @@ export class UsersController {
     public async read(
         @Param('id') id: string,
         @Request() req: AuthenticatedRequest
-    ): Promise<UserFullInfoDTO> {
+    ): Promise<UserDTO> {
         const role = new RoleHelper(req);
         // if "user" => only info about her/him-self
         // if "domainAdmin" => info about a user in that very domain
@@ -59,7 +76,7 @@ export class UsersController {
             (role.isUser && role.isSelf(id))) {
             const userInfo = await this.usersService.read(id);
             if (userInfo) {
-                return UserFullInfoDTO.marshal(userInfo);
+                return UserDTO.marshal(userInfo);
             }
             throw new NotFoundException();
         }

@@ -1,9 +1,10 @@
 // NestJS
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Header } from '@nestjs/common';
 
 // Application
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponseOK } from 'src/shared';
 import { MdInfoDTO, NativeModuleInfoDTO, PkgInfoDTO, SystemInfoDTO } from './dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth';
 import { SystemService } from './system.service';
 
@@ -14,8 +15,15 @@ export class SystemController {
 
     public constructor(private readonly systemService: SystemService) { }
 
+    /**
+     * Request all information on the subsystems that make up the backend.
+     * 
+     * @returns SystemInfoDTO
+     */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'systemReadInfo' })
+    @ApiResponse(ApiResponseOK('System information.', SystemInfoDTO))
+    @Header('Cache-Control', 'none')
     @Get('info')
     public async readVersion(): Promise<SystemInfoDTO> {
         const mdInfo = new MdInfoDTO(await this.systemService.readMdInfo());

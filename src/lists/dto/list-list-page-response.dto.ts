@@ -9,6 +9,6 @@ export class ListListPageResponseDTO
     extends ListPageResponseDTO
     implements IListPageResponse<ListListItemDTO> {
 
-    @ApiProperty()
+    @ApiProperty({ type: ListListItemDTO, isArray: true })
     public data: ListListItemDTO[] = [];
 }

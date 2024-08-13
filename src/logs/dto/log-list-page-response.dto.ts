@@ -9,6 +9,6 @@ export class LogListPageResponseDTO
     extends ListPageResponseDTO
     implements IListPageResponse<LogFileInfoDTO> {
 
-    @ApiProperty({ type: Array<LogFileInfoDTO>})
+    @ApiProperty({ type: LogFileInfoDTO, isArray: true})
     public data: LogFileInfoDTO[] = [];
 }

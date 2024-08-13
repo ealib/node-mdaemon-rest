@@ -1,2 +1,3 @@
-export * from './user-full-info.dto';
-export * from './user-info';
+export * from './user.dto';
+export * from './user-list-item.dto';
+export * from './user-list-page-response.dto';

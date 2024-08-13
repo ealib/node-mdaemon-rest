@@ -6,7 +6,7 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@ne
 import { GroupDTO, GroupListItemDTO, GroupListPageResponseDTO } from './dto';
 import { GroupsService } from './groups.service';
 import { Roles } from 'src/auth';
-import { ListPageParams } from 'src/shared';
+import { ApiQueryPage, ApiQueryPageSize, ApiResponseListOK, ListPageParams } from 'src/shared';
 
 @ApiBearerAuth()
 @ApiTags('groups')
@@ -22,9 +22,9 @@ export class GroupsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'groupsReadAll' })
-    @ApiQuery({ name: 'page', required: false, description: 'Requested page number, starting from zero for the first page (default is 0).' })
-    @ApiQuery({ name: 'pageSize', required: false, description: 'Page size (default is 10). ' })
-    @ApiResponse({ status: 200, description: 'List page response for user groups', type: GroupListPageResponseDTO })
+    @ApiQuery(ApiQueryPage)
+    @ApiQuery(ApiQueryPageSize)
+    @ApiResponse(ApiResponseListOK('groups', GroupListPageResponseDTO))
     @Header('Cache-Control', 'none')
     @Get()
     public async readAll(

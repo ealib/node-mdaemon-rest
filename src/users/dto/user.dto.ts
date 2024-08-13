@@ -2,11 +2,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 // Application
-import { UserInfoDTO } from "./user-info";
+import { UserListItemDTO } from "./user-list-item.dto";
 import { MD_AutoResponder, MD_Forwarding, MD_UserInfo } from 'node-mdaemon-api';
 
-export class UserFullInfoDTO
-    extends UserInfoDTO {
+export class UserDTO
+    extends UserListItemDTO {
 
         AccessType: string;
         AllowChangeViaEmail: boolean;
@@ -74,7 +74,7 @@ export class UserFullInfoDTO
         WebConfig: number;
 
         public static marshal(userInfo: MD_UserInfo) {
-            const dto = new UserFullInfoDTO();
+            const dto = new UserDTO();
             Object.assign(dto, userInfo);
             delete dto.Password;
             delete dto.PasswordEx;

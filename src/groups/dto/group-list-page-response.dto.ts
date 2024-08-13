@@ -9,6 +9,6 @@ export class GroupListPageResponseDTO
     extends ListPageResponseDTO
     implements IListPageResponse<GroupListItemDTO> {
 
-    @ApiProperty()
+    @ApiProperty({ type: GroupListItemDTO, isArray: true })
     public data: GroupListItemDTO[] = [];
 }

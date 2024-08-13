@@ -6,10 +6,10 @@ import { Controller, Delete, Get, Header, Param, Query, Res, StreamableFile } fr
 import { Response } from 'express';
 
 // Application
+import { ApiQueryPage, ApiQueryPageSize, ApiResponseListOK, ListPageParams, ListPageResponseDTO } from 'src/shared';
 import { LogFileInfoDTO, LogListPageResponseDTO } from './dto';
 import { LogsService } from './logs.service';
 import { Roles } from '../auth';
-import { ListPageParams, ListPageResponseDTO } from 'src/shared';
 
 
 @ApiBearerAuth()
@@ -28,14 +28,14 @@ export class LogsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'logsReadAll' })
-    @ApiQuery({ name: 'page', required: false, description: 'Requested page number, starting from zero for the first page (default is 0).' })
-    @ApiQuery({ name: 'pageSize', required: false, description: 'Page size (default is 10). ' })
-    @ApiResponse({ status: 200, description: 'List page response for logs', type: LogListPageResponseDTO })
+    @ApiQuery(ApiQueryPage)
+    @ApiQuery(ApiQueryPageSize)
+    @ApiResponse(ApiResponseListOK('logs', LogListPageResponseDTO))
     @Header('Cache-Control', 'none')
     @Get()
     public async readAll(
         @Query('page') page: string | number | undefined = 0,
-        @Query('pageSize') pageSize: string | number | undefined  = 10,
+        @Query('pageSize') pageSize: string | number | undefined = 10,
     ): Promise<LogListPageResponseDTO> {
         const params = new ListPageParams(page, pageSize);
         const result = await this.logsService.readAll(params);

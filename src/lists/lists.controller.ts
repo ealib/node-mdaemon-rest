@@ -3,8 +3,8 @@ import { Controller, Get, Header, NotFoundException, Param, Query } from '@nestj
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 // Application
+import { ApiQueryPage, ApiQueryPageSize, ApiResponseListOK, ListPageParams } from 'src/shared';
 import { ListDTO, ListListItemDTO, ListListPageResponseDTO, ListMemberDTO } from './dto';
-import { ListPageParams } from 'src/shared';
 import { ListsService } from './lists.service';
 import { Roles } from 'src/auth';
 
@@ -23,9 +23,9 @@ export class ListsController {
      */
     @Roles(['admin'])
     @ApiOperation({ operationId: 'listsReadAll' })
-    @ApiQuery({ name: 'page', required: false, description: 'Requested page number, starting from zero for the first page (default is 0).' })
-    @ApiQuery({ name: 'pageSize', required: false, description: 'Page size (default is 10). ' })
-    @ApiResponse({ status: 200, description: 'List page response for Mailing lists', type: ListListPageResponseDTO })
+    @ApiQuery(ApiQueryPage)
+    @ApiQuery(ApiQueryPageSize)
+    @ApiResponse(ApiResponseListOK('Mailing lists', ListListPageResponseDTO))
     @Header('Cache-Control', 'none')
     @Get()
     public async readAll(

@@ -1,5 +1,5 @@
 // NestJS
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 // node-mdaemon-api
 import {
@@ -15,13 +15,17 @@ import {
 } from 'node-mdaemon-api';
 
 // Application
-import { BaseService } from 'src/shared';
+import { BaseService, ListPageParams } from 'src/shared';
+import { UserListPageResult } from './models';
 
 @Injectable()
 export class UsersService extends BaseService {
 
+    readonly logger = new Logger(UsersService.name);
+
     constructor() {
         super(UsersService.name);
+        this.logger.debug(this.name);
     }
 
     //#region CRUD
@@ -43,12 +47,15 @@ export class UsersService extends BaseService {
         return userInfo;
     }
 
-    public async readAll(domain?: string): Promise<MD_UserInfo[]> {
-        return new Promise<MD_UserInfo[]>(
+    public async readAll(
+        params: ListPageParams,
+        domain?: string,
+    ): Promise<UserListPageResult> {
+        return new Promise<UserListPageResult>(
             (resolve, _) => readUsers((err: any, users?: UserListItem[]) => {
                 if (err) {
                     console.error(err);
-                    resolve([]);
+                    resolve(new UserListPageResult());
                 } else {
                     const domainUsers =
                         domain
@@ -57,12 +64,8 @@ export class UsersService extends BaseService {
                                 return domain === domainPart;
                             })
                             : users;
-                    const userInfoList: MD_UserInfo[] = [];
-                    domainUsers.forEach(async ({ Email }) => {
-                        const userInfo = await this.read(Email);
-                        userInfoList.push(userInfo);
-                    });
-                    resolve(userInfoList);
+                    const result = new UserListPageResult(domainUsers, domainUsers.length);
+                    resolve(result);
                 }
             })
         );
