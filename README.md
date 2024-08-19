@@ -1,5 +1,8 @@
 # `node-mdaemon-rest`
 
+![GitHub issues](https://img.shields.io/github/issues/ealib/node-mdaemon-rest)
+[![Matrix](https://img.shields.io/matrix/mdaemon-ecosystem:matrix.org?label=Matrix%20chat)](https://matrix.to/#/#mdaemon-ecosystem:matrix.org)
+
 ## Description
 
 [Proof of concept](https://en.wikipedia.org/wiki/Proof_of_concept)
