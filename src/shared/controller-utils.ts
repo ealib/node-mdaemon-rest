@@ -1,16 +1,24 @@
 export const ApiQueryPage = {
-    description: 'Requested page number, starting from zero for the first page.',
-    name: 'page',
+    description:
+        "Requested page number, starting from zero for the first page.",
+    name: "page",
     required: false,
     type: Number,
     default: 0,
 };
 export const ApiQueryPageSize = {
-    description: 'Page size.',
-    name: 'pageSize',
+    description: "Page size.",
+    name: "pageSize",
     required: false,
     type: Number,
     default: 10,
+};
+export const ApiQueryDomain = {
+    description: "Domain name to limit search in.",
+    name: "domain",
+    required: false,
+    type: String,
+    default: undefined,
 };
 export function ApiResponseListOK(descriptionEntity: string, type: any) {
     return {
@@ -20,5 +28,5 @@ export function ApiResponseListOK(descriptionEntity: string, type: any) {
     };
 }
 export function ApiResponseOK(description: string, type: any) {
-    return { description, status: 200, type, };
+    return { description, status: 200, type };
 }

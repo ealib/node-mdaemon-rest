@@ -1,14 +1,15 @@
 import { IListPage } from "../interface";
+import { ListFilter } from "./list-filter";
 
 export class ListPageParams {
-
     public readonly page: IListPage = { index: 0, size: 10 };
 
-    #filters: { [key: string]: any, } = {};
+    #filters: ListFilter[] = [];
 
     constructor(page?: number | string, pageSize?: number | string) {
+        this.#filters = [];
         if (page) {
-            if (typeof page === 'number') {
+            if (typeof page === "number") {
                 this.page.index = page >= 0 ? page : 0;
             } else {
                 const n = parseInt(page);
@@ -16,7 +17,7 @@ export class ListPageParams {
             }
         }
         if (pageSize) {
-            if (typeof pageSize === 'number') {
+            if (typeof pageSize === "number") {
                 this.page.size = pageSize >= 1 ? pageSize : 10;
             } else {
                 const n = parseInt(pageSize);
@@ -26,15 +27,23 @@ export class ListPageParams {
     }
 
     public get hasFilters(): boolean {
-        return Object.keys(this.#filters).length > 0;
+        return this.#filters.length > 0;
     }
     public get filterNames(): string[] {
-        return Object.keys(this.#filters);
+        const allProperties = this.#filters.map((filter) => filter.property);
+        return allProperties
+            .filter((property, index) =>
+                allProperties.indexOf(property) == index
+            )
+            .sort();
     }
-    public addFilter(name: string, value: any) {
-        this.#filters[name] = value;
+    public addFilter(property: string, value: any) {
+        this.#filters.push({ property, value });
     }
-    public getFilter<TValue>(name: string): TValue {
-        return this.#filters[name] as TValue;
+    public getFilter<TValue>(property: string): TValue[] {
+        const values: TValue[] = this.#filters
+            .filter((filter) => filter.property === property)
+            .map((filter) => (filter.value as TValue));
+        return values;
     }
 }

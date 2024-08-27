@@ -1,26 +1,26 @@
 // NestJS
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from "@nestjs/common";
 
 // node-mdaemon-api
 import {
+    isBadHandle,
     MD_DeleteUser,
     MD_GetByEmail,
     MD_GetFree,
+    MD_GetIMAPFolderList,
     MD_GetUserInfo,
     MD_UserInfo,
-    UserListItem,
-    isBadHandle,
     readUserRoles,
     readUsers,
-} from 'node-mdaemon-api';
+    UserListItem,
+} from "node-mdaemon-api";
 
 // Application
-import { BaseService, ListPageParams } from 'src/shared';
-import { UserListPageResult } from './models';
+import { BaseService, ListPageParams } from "src/shared";
+import { ImapFolderInfo, UserListPageResult } from "./models";
 
 @Injectable()
 export class UsersService extends BaseService {
-
     readonly logger = new Logger(UsersService.name);
 
     constructor() {
@@ -47,27 +47,36 @@ export class UsersService extends BaseService {
         return userInfo;
     }
 
-    public async readAll(
-        params: ListPageParams,
-        domain?: string,
-    ): Promise<UserListPageResult> {
+    public async readAll(params: ListPageParams): Promise<UserListPageResult> {
         return new Promise<UserListPageResult>(
-            (resolve, _) => readUsers((err: any, users?: UserListItem[]) => {
-                if (err) {
-                    console.error(err);
-                    resolve(new UserListPageResult());
-                } else {
-                    const domainUsers =
-                        domain
-                            ? users.filter(user => {
-                                const [_, domainPart] = user.Email.split('@');
-                                return domain === domainPart;
-                            })
-                            : users;
-                    const result = new UserListPageResult(domainUsers, domainUsers.length);
-                    resolve(result);
-                }
-            })
+            (resolve, _) =>
+                readUsers((err: any, users?: UserListItem[]) => {
+                    if (err) {
+                        console.error(err);
+                        resolve(new UserListPageResult());
+                    } else {
+                        let domainUsers: UserListItem[] = [];
+                        if (params.hasFilters) {
+                            const searchDomains = params.getFilter<string>(
+                                "domain",
+                            );
+                            domainUsers = users.filter((user) => {
+                                const [_, domainPart] = user.Email.split(
+                                    "@",
+                                );
+                                return searchDomains.includes(domainPart);
+                            });
+                        } else {
+                            domainUsers = users;
+                        }
+                        const page = this.arrayToPage<UserListItem>(params.page, domainUsers);
+                        const result = new UserListPageResult(
+                            page,
+                            domainUsers.length,
+                        );
+                        resolve(result);
+                    }
+                }),
         );
     }
 
@@ -75,8 +84,33 @@ export class UsersService extends BaseService {
         return new Promise<string[]>((resolve, _) => {
             readUserRoles(email, (error: Error, roles?: string[]) => {
                 resolve(error ? [] : roles);
-            })
+            });
         });
+    }
+
+    public async readFolders(
+        email: string,
+    ): Promise<ImapFolderInfo[] | undefined> {
+        const hUser = MD_GetByEmail(email);
+        if (isBadHandle(hUser)) {
+            return;
+        }
+        const flags = 0; // unknown parameter
+        const apiResult = MD_GetIMAPFolderList(hUser, flags);
+        MD_GetFree(hUser);
+
+        if (!apiResult.Succeeded) {
+            console.debug(apiResult.ErrorMessage, apiResult.ErrorCode);
+            return;
+        }
+
+        const data = apiResult.Data;
+
+        if (!Array.isArray(data) || data.length === 0) {
+            return;
+        }
+
+        return data.map((fi) => new ImapFolderInfo(fi));
     }
     //#endregion
 
@@ -90,5 +124,4 @@ export class UsersService extends BaseService {
     //#endregion
 
     //#endregion
-
 }
