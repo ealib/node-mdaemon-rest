@@ -1,12 +1,21 @@
 # node-mdaemon-rest Changelog
 
-## v0.0.5 - untagged
+## v0.0.5 - 2024-08-27
+
+Some list APIs support pagination via query params `page` (0+; default
+0) and `pageSize` (default 10).
+
+    GET /api/groups?page=0&pageSize=10
+    GET /api/lists?page=0&pageSize=10
+    GET /api/lists?page=0&pageSize=10
+    GET /api/logs?page=0&pageSize=10
+    GET /api/users?page=0&pageSize=10
 
 New verbs and routes:
 
     GET /api/system/info
 
-Services have a common ancestor (currently empty).
+Services have a common ancestor class.
 
 ## v0.0.4 - 2024-06-25
 
