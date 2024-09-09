@@ -4,7 +4,7 @@ import { Controller, Get, Header } from '@nestjs/common';
 // Application
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseOK } from 'src/shared';
-import { MdInfoDTO, NativeModuleInfoDTO, PkgInfoDTO, SystemInfoDTO } from './dto';
+import { ClusterInfoDTO, MdInfoDTO, NativeModuleInfoDTO, PkgInfoDTO, SystemInfoDTO } from './dto';
 import { Roles } from 'src/auth';
 import { SystemService } from './system.service';
 
@@ -31,5 +31,21 @@ export class SystemController {
         const modules = (await this.systemService.readAllModuleInfo())
             .map(info => new NativeModuleInfoDTO(info));
         return new SystemInfoDTO(mdInfo, pkgInfo, modules);
+    }
+
+    /**
+     * Request clustering information for this MD instance.
+     * 
+     * @returns ClusterInfoDTO
+     */
+    @Roles(['admin'])
+    @ApiOperation({ operationId: 'systemReadClusterInfo'})
+    @ApiResponse(ApiResponseOK('System clustering information.', ClusterInfoDTO))
+    @Header('Cache-Control', 'none')
+    @Get('cluster')
+    public async readClusterInfo(): Promise<ClusterInfoDTO> {
+        const info = await this.systemService.readClusterInfo();
+        const dto = new ClusterInfoDTO(info);
+        return dto;
     }
 }

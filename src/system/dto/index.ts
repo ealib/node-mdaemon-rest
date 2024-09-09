@@ -1,3 +1,4 @@
+export * from './cluster-info.dto';
 export * from './md-info.dto';
 export * from './native-module-info.dto';
 export * from './pkg-info.dto';
