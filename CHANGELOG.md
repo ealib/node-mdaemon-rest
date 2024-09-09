@@ -1,5 +1,11 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.6 - 2024-09-09
+
+New verbs and routes:
+
+    GET /api/system/cluster
+
 ## v0.0.5 - 2024-08-27
 
 Some list APIs support pagination via query params `page` (0+; default
