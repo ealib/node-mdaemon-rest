@@ -20,7 +20,7 @@ export abstract class BaseService {
         }
         const indexSafe = Math.abs(requestedPage.index ?? 0);
         const sizeSafe = Math.abs(requestedPage.size ?? 0);
-        const offset: number = (indexSafe * sizeSafe) ?? 0;
+        const offset: number = indexSafe * sizeSafe;
         const offsetSafe = (offset > dataSafe.length) ? 0 : offset;
         const end = offsetSafe + sizeSafe;
         return dataSafe.slice(offset, end);
