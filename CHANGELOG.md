@@ -1,5 +1,10 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.7 - 2024-11-26
+
+- compatible with MDaemon 24.5.x
+- compatible with Node.js 22.x
+
 ## v0.0.6 - 2024-09-09
 
 New verbs and routes:
