@@ -1,6 +1,6 @@
 {
   "name": "node-mdaemon-rest",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "RESTful API server for MDaemon",
   "author": {
     "name": "Emanuele Aliberti",
