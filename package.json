@@ -28,7 +28,7 @@
     "@nestjs/platform-express": "^11.0.8",
     "@nestjs/serve-static": "^5.0.2",
     "@nestjs/swagger": "^11.0.3",
-    "node-mdaemon-api": "^24.5.2-alpha.37",
+    "node-mdaemon-api": "25.0.0-alpha.38",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
