@@ -39,20 +39,20 @@ REM enter local source repository
 C:\Users\UserName> cd node-mdaemon-rest
 
 REM install dependencies
-C:\Users\UserName\node-mdaemon-rest> yarn install
+C:\Users\UserName\node-mdaemon-rest> pnpm install
 ```
 
 ## Running the server
 
 ```dos
 REM development
-C:\Users\UserName\node-mdaemon-rest> yarn run start
+C:\Users\UserName\node-mdaemon-rest> pnpm run start
 
 REM watch mode
-C:\Users\UserName\node-mdaemon-rest> yarn run start:dev
+C:\Users\UserName\node-mdaemon-rest> pnpm run start:dev
 
 REM production mode
-C:\Users\UserName\node-mdaemon-rest> yarn run start:prod
+C:\Users\UserName\node-mdaemon-rest> pnpm run start:prod
 ```
 
 ## Customisation
