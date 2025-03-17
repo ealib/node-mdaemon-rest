@@ -1,5 +1,10 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.8 - 2025-03-17
+
+- compatible with MDaemon 25.0.x
+- requires Node.js 19+
+
 ## v0.0.7 - 2024-11-26
 
 - compatible with MDaemon 24.5.x
