@@ -1,5 +1,9 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.9 - 2025-07-23
+
+- faster `GET /api/users` via node-mdaemon-api 25.0.3-alpha.40
+
 ## v0.0.8 - 2025-03-17
 
 - compatible with MDaemon 25.0.x
