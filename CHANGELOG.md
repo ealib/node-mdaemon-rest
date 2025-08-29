@@ -1,5 +1,9 @@
 # node-mdaemon-rest Changelog
 
+## v0.0.10 - 2025-08-29
+
+- unicode fix for `GET /api/users` via node-mdaemon-api 25.0.3-alpha.42
+
 ## v0.0.9 - 2025-07-23
 
 - faster `GET /api/users` via node-mdaemon-api 25.0.3-alpha.40
